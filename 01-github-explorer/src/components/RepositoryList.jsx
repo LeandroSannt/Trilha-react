@@ -1,20 +1,23 @@
+import {useState,useEffect} from 'react'
 import {RepositoryItem} from "./RepositoryItem";
 import '../styles/repositories.scss'
-const repository = {
-    nome:"unform",
-    description:"forms in react",
-    link:"https://github.com/LeandroSannt"
-}
+
 
 export function RepositoryList(){
+    const [repositories,setRepositories] = useState([]);
+    useEffect(() =>{
+        fetch('https://jsonplaceholder.typicode.com/posts')
+        .then(response => response.json())
+        .then(data =>setRepositories(data))
+    }, [])
+    
     return(
         <section className="repository-list">
             <h1>Lista de repositorios</h1>
             <ul>
-                <RepositoryItem repository = {repository}/>
-                <RepositoryItem repository = {repository}/>
-                <RepositoryItem repository = {repository}/>
-                <RepositoryItem repository = {repository}/>
+                {repositories.map(repository =>{
+                    return <RepositoryItem key={repository.userId} repository={repository}/>
+                })}
             </ul>
         </section>
     );
