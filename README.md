@@ -1,2 +1,4 @@
 # Trilha-react
-Aulas curso ignite rocketseat
+
+
+<P>Repositorios com aulas e projetos do curso ignite da rocketseat<P>
