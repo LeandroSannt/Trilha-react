@@ -9,7 +9,8 @@ export const GlobalStyle = createGlobalStyle `
         --blue-light:#6933ff;
         --text-title:#363f5f;
         --text-body:#969cb3;
-        --shape:#ffffff
+        --shape:#ffffff;
+        --green:#33c695;
     }
     *{
         margin:0;
@@ -29,7 +30,7 @@ export const GlobalStyle = createGlobalStyle `
     }
 
     body{
-        background: var(---background);
+        background: var(--background);
         -webkit-font-smoothing:antialiased;
 
     }
