@@ -1,10 +1,10 @@
 import Modal from 'react-modal'
+import { FormEvent, useState, useContext } from 'react'
 import { Container, RadioBox, TransactionTypeContainer } from './styles'
 import incomeImg from '../../assets/income.svg'
 import outcomeImg from '../../assets/outcome.svg'
 import closeImg from '../../assets/close.svg'
-import { FormEvent, useState } from 'react'
-import { api } from '../../services/api'
+import { TransactionsContext } from '../../TransactionsContext'
 
 interface NewTransactionModalProps{
     isOpen:boolean;
@@ -12,23 +12,27 @@ interface NewTransactionModalProps{
 }
 
 export function NewTransactionModal({isOpen,onRequestClose}:NewTransactionModalProps){
+
+    const {createTransaction} = useContext(TransactionsContext)
+
     const [type,setType] =useState('deposit')
     const [title,setTitle] = useState('');
-    const [value,setValue] = useState(0);
+    const [amount,setAmount] = useState(0);
     const [category,setCategory] = useState('');
 
 
-    function handleCreateNewTransaction(event: FormEvent){
+    async function handleCreateNewTransaction(event: FormEvent){
         event.preventDefault()
 
-        const data ={
-            title,
-            value,
-            category,
-            type
-        }
+    await createTransaction({
+        title,
+        amount,
+        category,
+        type,
+    })
 
-        api.post('/transactions',data)
+    onRequestClose()
+
     }
 
     return(
@@ -46,8 +50,8 @@ export function NewTransactionModal({isOpen,onRequestClose}:NewTransactionModalP
                 <input 
                     type="number" 
                     placeholder="Valor" 
-                    value={value} 
-                    onChange={event =>setValue(Number(event.target.value))}/>
+                    value={amount} 
+                    onChange={event =>setAmount(Number(event.target.value))}/>
 
                 <TransactionTypeContainer>
                     <RadioBox type="button" onClick={() => setType('deposit')} isActive={type === 'deposit'} activeColor= 'green'>
