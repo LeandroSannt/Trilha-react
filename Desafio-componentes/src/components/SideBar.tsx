@@ -3,7 +3,7 @@ import { Button } from './Button';
 
 interface GenreResponseProps {
   id: number;
-  name: 'action' | 'comedy' | 'documentary' | 'drama' | 'horror' | 'family';
+  name: 'action' | 'comedy' | 'documentary' | 'drama' | 'horror' | 'family' |'comida';
   title: string;
 }
 
