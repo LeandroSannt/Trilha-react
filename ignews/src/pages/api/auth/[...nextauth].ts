@@ -1,53 +1,59 @@
-import NextAuth from 'next-auth';
-import GitHubProvider from "next-auth/providers/github";
-import { query as q} from 'faunadb'
+import { query as q } from 'faunadb'
 
-import {fauna} from '../../../services/fauna'
+import NextAuth from "next-auth"
+import GithubProvider from "next-auth/providers/github"
+
+import { fauna } from '../../../services/fauna'
 
 export default NextAuth({
-
+  // Configure one or more authentication providers
   providers: [
-    GitHubProvider({
-      clientId: process.env.GITHUB_CLIEND_ID,
+    GithubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      authorization: "https://github.com/login/oauth/authorize?scope=read:user+user:email",
-
-    })
+      authorization: {
+        params: {
+          scope: 'read:user'
+        }
+      }
+    }),
+    // ...add more providers here
   ],
-
-  callbacks:{
-    async signIn({user,account,profile}){
-      const {email} = user
-      try{
+  callbacks: {
+    async signIn({ user, account, profile }) {
+      const { name } = user
+      try {
         await fauna.query(
           q.If(
             q.Not(
               q.Exists(
                 q.Match(
                   q.Index('user_by_email'),
-                  q.Casefold(user.email)
+                  q.Casefold(user.name)
                 )
               )
             ),
-
-        q.Create(
-          q.Collection('users'),
-          {data:{email}}
-        ),
-        q.Get(
-          q.Match(
-            q.Index('user_by_email'),
-            q.Casefold(user.email)
-          )
+            q.Create(
+              q.Collection('users'),
+              { data: { name } }
+            ),
+            q.Get(
+              q.Match(
+                q.Index('user_by_email'),
+                q.Casefold(user.name)
+              )
+            )
           )
         )
-       )
+
         return true
-    }catch{
+
+      } catch {
 
         return false
-      }
-    }
-  }
 
+      }
+
+    },
+  }
 })
