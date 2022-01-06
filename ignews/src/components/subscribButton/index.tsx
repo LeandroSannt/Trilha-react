@@ -18,7 +18,6 @@ export function SubscribButton({priceId}:SubscripProps){
     try{
 
       const response = await api.post("/subscribe")
-      console.log('response.data')
 
       const {sessionId} = response.data
 
